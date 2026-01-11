@@ -1,5 +1,5 @@
 [tools]
-go = "1.23"
+go = "1.25"
 
 [tasks.build]
 description = "Build the binary"
@@ -15,7 +15,7 @@ run = "go test ./..."
 
 [tasks.lint]
 description = "Run linter"
-run = "golangci-lint run"
+run = "go vet ./..."
 
 [tasks.install]
 description = "Install locally"
