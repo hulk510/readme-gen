@@ -85,8 +85,39 @@ func runInit(cmd *cobra.Command, args []string) error {
 			selectedOptions = append(selectedOptions, "ai")
 		}
 	} else {
-		// Interactive mode
-		form := huh.NewForm(
+		// Interactive mode with steps
+		var selectedLang string
+
+		// Step 1: Language selection
+		fmt.Println()
+		fmt.Println(ui.Step(1, 4, msg.StepLanguage))
+		langForm := huh.NewForm(
+			huh.NewGroup(
+				huh.NewSelect[string]().
+					Title(msg.SelectLanguage).
+					Options(
+						huh.NewOption(msg.LangEnglish, "en"),
+						huh.NewOption(msg.LangJapanese, "ja"),
+					).
+					Value(&selectedLang),
+			),
+		)
+		if err := langForm.Run(); err != nil {
+			return err
+		}
+
+		// Apply language selection
+		if selectedLang == "ja" {
+			i18n.SetLanguage(i18n.Japanese)
+		} else {
+			i18n.SetLanguage(i18n.English)
+		}
+		msg = i18n.Get() // Refresh messages
+
+		// Step 2: Template selection
+		fmt.Println()
+		fmt.Println(ui.Step(2, 4, msg.StepTemplate))
+		templateForm := huh.NewForm(
 			huh.NewGroup(
 				huh.NewSelect[string]().
 					Title(msg.SelectTemplate).
@@ -96,12 +127,32 @@ func runInit(cmd *cobra.Command, args []string) error {
 						huh.NewOption(msg.TemplateTeam, "team"),
 					).
 					Value(&selectedTemplate),
+			),
+		)
+		if err := templateForm.Run(); err != nil {
+			return err
+		}
 
+		// Step 3: Project info
+		fmt.Println()
+		fmt.Println(ui.Step(3, 4, msg.StepProjectInfo))
+		infoForm := huh.NewForm(
+			huh.NewGroup(
 				huh.NewInput().
 					Title(msg.ProjectName).
 					Value(&projectName).
 					Placeholder(info.Name),
+			),
+		)
+		if err := infoForm.Run(); err != nil {
+			return err
+		}
 
+		// Step 4: Integrations
+		fmt.Println()
+		fmt.Println(ui.Step(4, 4, msg.StepIntegration))
+		integrationForm := huh.NewForm(
+			huh.NewGroup(
 				huh.NewMultiSelect[string]().
 					Title(msg.ClaudeCodeIntegration).
 					Options(
@@ -111,8 +162,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 					Value(&selectedOptions),
 			),
 		)
-
-		if err := form.Run(); err != nil {
+		if err := integrationForm.Run(); err != nil {
 			return err
 		}
 	}

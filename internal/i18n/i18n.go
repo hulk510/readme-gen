@@ -57,6 +57,17 @@ type Messages struct {
 	AddedDescriptions     string
 	ClaudeCodeNotFound    string
 	AIGenerationFailed    string
+
+	// Steps
+	StepLanguage    string
+	StepTemplate    string
+	StepProjectInfo string
+	StepIntegration string
+
+	// Language selection
+	SelectLanguage string
+	LangEnglish    string
+	LangJapanese   string
 }
 
 var messages = map[Language]Messages{
@@ -96,6 +107,15 @@ var messages = map[Language]Messages{
 		AddedDescriptions:     "Added directory descriptions",
 		ClaudeCodeNotFound:    "Claude Code not found. Skipping AI generation.",
 		AIGenerationFailed:    "AI generation failed",
+
+		StepLanguage:    "Language",
+		StepTemplate:    "Template",
+		StepProjectInfo: "Project Info",
+		StepIntegration: "Integrations",
+
+		SelectLanguage: "Select language",
+		LangEnglish:    "English",
+		LangJapanese:   "日本語 (Japanese)",
 	},
 	Japanese: {
 		AppDescription:     "README.mdを構造自動同期で管理するCLIツール",
@@ -133,6 +153,15 @@ var messages = map[Language]Messages{
 		AddedDescriptions:     "ディレクトリの説明を追加しました",
 		ClaudeCodeNotFound:    "Claude Codeが見つかりません。AI生成をスキップします。",
 		AIGenerationFailed:    "AI生成に失敗しました",
+
+		StepLanguage:    "言語",
+		StepTemplate:    "テンプレート",
+		StepProjectInfo: "プロジェクト情報",
+		StepIntegration: "連携設定",
+
+		SelectLanguage: "言語を選択",
+		LangEnglish:    "English (英語)",
+		LangJapanese:   "日本語",
 	},
 }
 

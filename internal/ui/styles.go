@@ -41,6 +41,16 @@ var (
 			Background(lipgloss.Color("#1F2937")).
 			Foreground(lipgloss.Color("#F9FAFB")).
 			Padding(0, 1)
+
+	StepStyle = lipgloss.NewStyle().
+			Foreground(Primary).
+			Bold(true)
+
+	StepNumStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#FFFFFF")).
+			Background(Primary).
+			Padding(0, 1).
+			MarginRight(1)
 )
 
 // Icons
@@ -92,4 +102,11 @@ func Info(msg string) string {
 // Box wraps content in a styled box
 func Box(content string) string {
 	return BoxStyle.Render(content)
+}
+
+// Step prints a step indicator
+func Step(num int, total int, label string) string {
+	return fmt.Sprintf("%s %s",
+		StepNumStyle.Render(fmt.Sprintf("%d/%d", num, total)),
+		StepStyle.Render(label))
 }
