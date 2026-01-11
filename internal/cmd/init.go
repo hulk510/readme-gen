@@ -202,7 +202,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 		}
 
 		skillsContent := template.GetClaudeSkills(i18n.Current())
-		skillsPath := filepath.Join(skillsDir, "readme-update.md")
+		skillsPath := filepath.Join(skillsDir, "readme.md")
 		if err := os.WriteFile(skillsPath, []byte(skillsContent), 0644); err != nil {
 			return fmt.Errorf("failed to write skills file: %w", err)
 		}

@@ -61,52 +61,62 @@ func Render(templateName string, data Data) (string, error) {
 // GetClaudeSkills returns the Claude Code skills content
 func GetClaudeSkills(lang i18n.Language) string {
 	if lang == i18n.Japanese {
-		return `# README更新スキル
+		return `---
+description: README.mdの構造を更新する。/readme または「READMEを更新して」で実行。
+user_invocable: true
+---
 
-プロジェクトの構造や機能が大きく変わったときにREADME.mdを更新する。
+# README更新スキル
 
-## トリガー
+プロジェクトの構造変更時にREADME.mdを自動更新します。
 
-- ディレクトリ構造が変わったとき
-- 新機能を追加したとき
-- ユーザーが「README更新して」と言ったとき
+## 使い方
+
+ユーザーが以下のいずれかを実行した場合:
+- ` + "`/readme`" + ` コマンド
+- 「READMEを更新して」などの指示
 
 ## 手順
 
-1. ` + "`readme-gen check`" + ` で構造の変更を検出
+1. ` + "`readme-gen check`" + ` を実行して構造の変更を確認
 2. 同期されていなければ ` + "`readme-gen structure --update`" + ` を実行
-3. 他のセクション（Usage、Descriptionなど）はコードの変更に基づいて更新
-4. 更新は簡潔かつ正確に
+3. 構造セクション（マーカー間）のみ更新
+4. 他のセクションは明示的に依頼された場合のみ変更
 
 ## ルール
 
-- マーカー外のコンテンツは明示的に必要な場合以外は変更しない
-- READMEは簡潔に - 過度なドキュメント化は避ける
-- 大きな変更について不明な場合はユーザーに確認する
+- マーカー (` + "`<!-- readme-gen:structure:start -->`" + ` / ` + "`<!-- readme-gen:structure:end -->`" + `) 間のみ自動更新
+- コメント (` + "`# 説明`" + `) がある場合は保持
+- 大きな変更は確認を取る
 `
 	}
 
-	return `# README Update Skill
+	return `---
+description: Update README.md structure. Run with /readme or "update the README".
+user_invocable: true
+---
 
-Update README.md when project structure or functionality changes significantly.
+# README Update Skill
 
-## Trigger
+Automatically update README.md when project structure changes.
 
-- Directory structure changed
-- New features added
-- User requests "update README"
+## Usage
+
+When user runs:
+- ` + "`/readme`" + ` command
+- "Update the README" or similar request
 
 ## Steps
 
 1. Run ` + "`readme-gen check`" + ` to detect structure changes
 2. If out of sync, run ` + "`readme-gen structure --update`" + `
-3. Review and update other sections (Usage, Description) based on code changes
-4. Keep updates concise and accurate
+3. Only update structure section (between markers)
+4. Modify other sections only when explicitly requested
 
 ## Rules
 
-- Don't modify content outside markers unless explicitly needed
-- Keep README concise - avoid over-documentation
-- Ask user if unsure about significant changes
+- Only auto-update content between markers (` + "`<!-- readme-gen:structure:start -->`" + ` / ` + "`<!-- readme-gen:structure:end -->`" + `)
+- Preserve comments (` + "`# description`" + `) if present
+- Confirm with user for significant changes
 `
 }

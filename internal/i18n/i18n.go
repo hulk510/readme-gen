@@ -94,7 +94,7 @@ var messages = map[Language]Messages{
 		TemplateTeam:     "team - Internal docs style",
 
 		CreatedReadme: "Created README.md",
-		CreatedSkills: "Created .claude/skills/readme-update.md",
+		CreatedSkills: "Created .claude/skills/readme.md",
 		UpdatedReadme: "README.md updated!",
 
 		MarkersInfo:  "Structure will be placed between markers",
@@ -140,7 +140,7 @@ var messages = map[Language]Messages{
 		TemplateTeam:     "team - 内部ドキュメント向け",
 
 		CreatedReadme: "README.mdを作成しました",
-		CreatedSkills: ".claude/skills/readme-update.mdを作成しました",
+		CreatedSkills: ".claude/skills/readme.mdを作成しました",
 		UpdatedReadme: "README.mdを更新しました！",
 
 		MarkersInfo:  "構造はマーカー間に配置されます",
