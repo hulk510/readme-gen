@@ -163,24 +163,16 @@ func TestRender_Team_Japanese(t *testing.T) {
 	}
 }
 
-func TestGetClaudeSkills_English(t *testing.T) {
-	result := GetClaudeSkills(i18n.English)
+func TestGetClaudeSkills(t *testing.T) {
+	result := GetClaudeSkills()
 
 	if !strings.Contains(result, "README Update Skill") {
-		t.Error("expected English skills to contain 'README Update Skill'")
+		t.Error("expected skills to contain 'README Update Skill'")
 	}
 	if !strings.Contains(result, "readme-gen check") {
 		t.Error("expected skills to contain 'readme-gen check' command")
 	}
-}
-
-func TestGetClaudeSkills_Japanese(t *testing.T) {
-	result := GetClaudeSkills(i18n.Japanese)
-
-	if !strings.Contains(result, "README更新スキル") {
-		t.Error("expected Japanese skills to contain 'README更新スキル'")
-	}
-	if !strings.Contains(result, "readme-gen check") {
-		t.Error("expected skills to contain 'readme-gen check' command")
+	if !strings.Contains(result, "user_invocable: true") {
+		t.Error("expected skills to contain 'user_invocable: true'")
 	}
 }
