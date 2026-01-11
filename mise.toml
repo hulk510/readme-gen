@@ -1,0 +1,26 @@
+[tools]
+go = "1.23"
+
+[tasks.build]
+description = "Build the binary"
+run = "go build -o bin/readme-gen ./cmd/readme-gen"
+
+[tasks.dev]
+description = "Run in dev mode"
+run = "go run ./cmd/readme-gen"
+
+[tasks.test]
+description = "Run tests"
+run = "go test ./..."
+
+[tasks.lint]
+description = "Run linter"
+run = "golangci-lint run"
+
+[tasks.install]
+description = "Install locally"
+run = "go install ./cmd/readme-gen"
+
+[tasks.clean]
+description = "Clean build artifacts"
+run = "rm -rf bin/"
