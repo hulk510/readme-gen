@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0](https://github.com/hulk510/readme-gen/compare/v1.0.0...v1.1.0) (2026-01-11)
+
+
+### Features
+
+* add step indicators and language selection to init ([65cd738](https://github.com/hulk510/readme-gen/commit/65cd738fca1eea2d4929b4f588467ae349ebd226))
+* improve Claude Code skills format ([187a39b](https://github.com/hulk510/readme-gen/commit/187a39b40d70bca08fb1563529f54ca6d73ba8ed))
+
+
+### Bug Fixes
+
+* ignore inline comments when comparing structure ([231cfbf](https://github.com/hulk510/readme-gen/commit/231cfbf3841b6666a55a7befa7b7958bcf0b9fac))
+* replace golangci-lint with go vet ([a31bfbd](https://github.com/hulk510/readme-gen/commit/a31bfbd8ab09f95951c2708844e02dfa4cc3f635))
+* update test for simplified GetClaudeSkills ([8fb05f7](https://github.com/hulk510/readme-gen/commit/8fb05f70ea5ec99af7ef9b6e54c934b5dd5eedb7))
+
 ## 1.0.0 (2026-01-11)
 
 
