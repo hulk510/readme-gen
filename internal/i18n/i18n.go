@@ -41,9 +41,9 @@ type Messages struct {
 	TemplateTeam     string
 
 	// Success messages
-	CreatedReadme  string
-	CreatedSkills  string
-	UpdatedReadme  string
+	CreatedReadme string
+	CreatedSkills string
+	UpdatedReadme string
 
 	// Structure markers info
 	MarkersInfo  string
@@ -82,9 +82,9 @@ var messages = map[Language]Messages{
 		TemplatePersonal: "personal - Simple, minimal",
 		TemplateTeam:     "team - Internal docs style",
 
-		CreatedReadme:  "Created README.md",
-		CreatedSkills:  "Created .claude/skills/readme-update.md",
-		UpdatedReadme:  "README.md updated!",
+		CreatedReadme: "Created README.md",
+		CreatedSkills: "Created .claude/skills/readme-update.md",
+		UpdatedReadme: "README.md updated!",
 
 		MarkersInfo:  "Structure will be placed between markers",
 		RunLaterHint: "Run `readme-gen structure` to update later",
@@ -119,9 +119,9 @@ var messages = map[Language]Messages{
 		TemplatePersonal: "personal - シンプル、最小構成",
 		TemplateTeam:     "team - 内部ドキュメント向け",
 
-		CreatedReadme:  "README.mdを作成しました",
-		CreatedSkills:  ".claude/skills/readme-update.mdを作成しました",
-		UpdatedReadme:  "README.mdを更新しました！",
+		CreatedReadme: "README.mdを作成しました",
+		CreatedSkills: ".claude/skills/readme-update.mdを作成しました",
+		UpdatedReadme: "README.mdを更新しました！",
 
 		MarkersInfo:  "構造はマーカー間に配置されます",
 		RunLaterHint: "`readme-gen structure`で後から更新できます",

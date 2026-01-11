@@ -7,10 +7,10 @@ import (
 
 func TestExtract(t *testing.T) {
 	tests := []struct {
-		name     string
-		content  string
-		want     string
-		wantOk   bool
+		name    string
+		content string
+		want    string
+		wantOk  bool
 	}{
 		{
 			name: "valid markers with content",
