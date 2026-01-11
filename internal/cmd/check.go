@@ -42,8 +42,8 @@ func runCheck(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to scan directory: %w", err)
 	}
 
-	// Compare
-	if readmeStructure == currentStructure {
+	// Compare (strip comments from README structure for comparison)
+	if marker.StripComments(readmeStructure) == currentStructure {
 		fmt.Println(ui.Check(msg.StructureUpToDate))
 		return nil
 	}

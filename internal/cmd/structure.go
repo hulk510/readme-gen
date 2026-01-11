@@ -58,8 +58,8 @@ func runStructure(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to update structure: %w", err)
 	}
 
-	// Show diff if there were changes
-	if found && oldStructure != structure {
+	// Show diff if there were changes (strip comments for comparison)
+	if found && marker.StripComments(oldStructure) != structure {
 		fmt.Println()
 		fmt.Println(ui.Box(fmt.Sprintf("%s:\n\nOld:\n%s\n\nNew:\n%s", msg.ChangesDetected, oldStructure, structure)))
 		fmt.Println()

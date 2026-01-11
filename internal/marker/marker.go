@@ -63,3 +63,22 @@ func Update(content string, structure string) (string, error) {
 func Wrap(structure string) string {
 	return fmt.Sprintf("%s\n```\n%s\n```\n%s", MarkerStart, structure, MarkerEnd)
 }
+
+// StripComments removes inline comments (# ...) from structure lines for comparison
+func StripComments(structure string) string {
+	lines := strings.Split(structure, "\n")
+	var result []string
+
+	for _, line := range lines {
+		// Find comment marker that's not inside the tree structure
+		// Comments typically appear after directory/file names with spaces
+		if idx := strings.Index(line, "  #"); idx != -1 {
+			line = strings.TrimRight(line[:idx], " ")
+		} else if idx := strings.Index(line, "\t#"); idx != -1 {
+			line = strings.TrimRight(line[:idx], " \t")
+		}
+		result = append(result, line)
+	}
+
+	return strings.Join(result, "\n")
+}
