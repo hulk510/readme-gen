@@ -10,14 +10,13 @@ import (
 
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/huh/spinner"
+	"github.com/hulk510/readme-gen/internal/config"
 	"github.com/hulk510/readme-gen/internal/i18n"
 	"github.com/hulk510/readme-gen/internal/scanner"
 	"github.com/hulk510/readme-gen/internal/template"
 	"github.com/hulk510/readme-gen/internal/ui"
 	"github.com/spf13/cobra"
 )
-
-const aiTimeout = 2 * time.Minute
 
 var (
 	templateFlag   string
@@ -245,6 +244,13 @@ func generateWithAI(msg i18n.Messages) error {
 	if err != nil {
 		return fmt.Errorf("%s", msg.ClaudeCodeNotFound)
 	}
+
+	// Load config for timeout setting
+	cfg, err := config.Load(".")
+	if err != nil {
+		cfg = config.Default()
+	}
+	aiTimeout := time.Duration(cfg.AI.GetTimeout()) * time.Second
 
 	// Build prompt based on language
 	var prompt string

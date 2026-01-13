@@ -94,3 +94,48 @@ func TestParsePatterns(t *testing.T) {
 		t.Errorf("unexpected includes: %v", includes)
 	}
 }
+
+func TestAIConfig_GetTimeout(t *testing.T) {
+	tests := []struct {
+		name     string
+		timeout  int
+		expected int
+	}{
+		{"default when zero", 0, DefaultAITimeout},
+		{"default when negative", -1, DefaultAITimeout},
+		{"custom value", 300, 300},
+		{"small value", 30, 30},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cfg := AIConfig{Timeout: tt.timeout}
+			if got := cfg.GetTimeout(); got != tt.expected {
+				t.Errorf("GetTimeout() = %d, want %d", got, tt.expected)
+			}
+		})
+	}
+}
+
+func TestLoad_WithAIConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+
+	configContent := `structure:
+  use_gitignore: true
+ai:
+  timeout: 300
+`
+	err := os.WriteFile(filepath.Join(tmpDir, ConfigFileName), []byte(configContent), 0644)
+	if err != nil {
+		t.Fatalf("failed to write config: %v", err)
+	}
+
+	cfg, err := Load(tmpDir)
+	if err != nil {
+		t.Fatalf("Load failed: %v", err)
+	}
+
+	if cfg.AI.Timeout != 300 {
+		t.Errorf("expected AI.Timeout to be 300, got %d", cfg.AI.Timeout)
+	}
+}

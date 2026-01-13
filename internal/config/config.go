@@ -12,6 +12,7 @@ const ConfigFileName = ".readme-gen.yaml"
 // Config represents the configuration for readme-gen
 type Config struct {
 	Structure StructureConfig `yaml:"structure"`
+	AI        AIConfig        `yaml:"ai"`
 }
 
 // StructureConfig configures directory structure scanning
@@ -25,6 +26,14 @@ type StructureConfig struct {
 	MaxDepth int `yaml:"max_depth"`
 }
 
+// AIConfig configures AI generation settings
+type AIConfig struct {
+	// Timeout in seconds for AI generation (default: 120)
+	Timeout int `yaml:"timeout"`
+}
+
+const DefaultAITimeout = 120
+
 // Default returns the default configuration
 func Default() *Config {
 	return &Config{
@@ -33,7 +42,19 @@ func Default() *Config {
 			Patterns:     []string{},
 			MaxDepth:     0,
 		},
+		AI: AIConfig{
+			Timeout: DefaultAITimeout,
+		},
 	}
+}
+
+// GetTimeout returns the AI timeout duration
+// Returns default if not set or invalid
+func (c *AIConfig) GetTimeout() int {
+	if c.Timeout <= 0 {
+		return DefaultAITimeout
+	}
+	return c.Timeout
 }
 
 // Load reads configuration from .readme-gen.yaml in the given directory
