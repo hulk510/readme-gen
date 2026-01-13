@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -10,6 +11,12 @@ import (
 	"github.com/hulk510/readme-gen/internal/ui"
 	"github.com/spf13/cobra"
 )
+
+// exitFunc allows overriding os.Exit for testing
+var exitFunc = os.Exit
+
+// ErrOutOfSync is returned when structure is out of sync (for testing)
+var ErrOutOfSync = errors.New("structure out of sync")
 
 var checkCmd = &cobra.Command{
 	Use:   "check",
@@ -53,7 +60,7 @@ func runCheck(cmd *cobra.Command, args []string) error {
 	fmt.Println()
 	fmt.Println(ui.Info(msg.RunUpdateHint))
 
-	// Return error for CI
-	os.Exit(1)
-	return nil
+	// Exit with error for CI
+	exitFunc(1)
+	return ErrOutOfSync
 }
