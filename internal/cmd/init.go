@@ -173,7 +173,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 	}
 
 	// Generate structure
-	structure, err := scanner.Scan(".", scanner.DefaultExcludes())
+	structure, err := scanner.ScanAuto(".")
 	if err != nil {
 		return fmt.Errorf("failed to scan directory: %w", err)
 	}

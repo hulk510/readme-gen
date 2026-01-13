@@ -28,7 +28,7 @@ func runStructure(cmd *cobra.Command, args []string) error {
 	msg := i18n.Get()
 
 	// Scan directory
-	structure, err := scanner.Scan(".", scanner.DefaultExcludes())
+	structure, err := scanner.ScanAuto(".")
 	if err != nil {
 		return fmt.Errorf("failed to scan directory: %w", err)
 	}

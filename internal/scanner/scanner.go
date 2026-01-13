@@ -17,6 +17,7 @@ type ProjectInfo struct {
 }
 
 // DefaultExcludes returns the default list of directories to exclude
+// Deprecated: Use LoadMatcher or DefaultMatcher instead
 func DefaultExcludes() []string {
 	return []string{
 		".git",
@@ -77,14 +78,16 @@ func DetectProjectInfo(root string) ProjectInfo {
 }
 
 // Scan scans the directory and returns a tree structure as string
+// Deprecated: Use ScanWithMatcher instead
 func Scan(root string, excludes []string) (string, error) {
-	excludeMap := make(map[string]bool)
-	for _, e := range excludes {
-		excludeMap[e] = true
-	}
+	matcher := LegacyMatcher(root, excludes)
+	return ScanWithMatcher(root, matcher)
+}
 
+// ScanWithMatcher scans the directory using the provided matcher
+func ScanWithMatcher(root string, matcher *Matcher) (string, error) {
 	var builder strings.Builder
-	err := walkDir(root, "", &builder, excludeMap, true)
+	err := walkDirWithMatcher(root, "", &builder, matcher, true, 0)
 	if err != nil {
 		return "", err
 	}
@@ -92,7 +95,21 @@ func Scan(root string, excludes []string) (string, error) {
 	return strings.TrimSuffix(builder.String(), "\n"), nil
 }
 
-func walkDir(path string, prefix string, builder *strings.Builder, excludes map[string]bool, isRoot bool) error {
+// ScanAuto scans the directory using auto-loaded configuration
+func ScanAuto(root string) (string, error) {
+	matcher, err := LoadMatcher(root)
+	if err != nil {
+		return "", err
+	}
+	return ScanWithMatcher(root, matcher)
+}
+
+func walkDirWithMatcher(path string, prefix string, builder *strings.Builder, matcher *Matcher, isRoot bool, depth int) error {
+	// Check max depth
+	if matcher.MaxDepth() > 0 && depth > matcher.MaxDepth() {
+		return nil
+	}
+
 	entries, err := os.ReadDir(path)
 	if err != nil {
 		return err
@@ -101,17 +118,35 @@ func walkDir(path string, prefix string, builder *strings.Builder, excludes map[
 	// Filter and sort entries
 	var dirs []os.DirEntry
 	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+
 		name := entry.Name()
-		// Skip hidden files and excluded directories
+
+		// Skip hidden files (except at root level or if explicitly included)
 		if strings.HasPrefix(name, ".") && !isRoot {
-			continue
+			// Calculate relative path for matcher
+			relPath := name
+			if prefix != "" {
+				// Reconstruct relative path from prefix
+				relPath = getRelPath(prefix, name)
+			}
+			if matcher.IsExcluded(relPath, true) {
+				continue
+			}
+		} else {
+			// Calculate relative path
+			relPath := name
+			if prefix != "" {
+				relPath = getRelPath(prefix, name)
+			}
+			if matcher.IsExcluded(relPath, true) {
+				continue
+			}
 		}
-		if excludes[name] {
-			continue
-		}
-		if entry.IsDir() {
-			dirs = append(dirs, entry)
-		}
+
+		dirs = append(dirs, entry)
 	}
 
 	sort.Slice(dirs, func(i, j int) bool {
@@ -140,12 +175,24 @@ func walkDir(path string, prefix string, builder *strings.Builder, excludes map[
 		}
 
 		subPath := filepath.Join(path, name)
-		if err := walkDir(subPath, newPrefix, builder, excludes, false); err != nil {
+		if err := walkDirWithMatcher(subPath, newPrefix, builder, matcher, false, depth+1); err != nil {
 			return err
 		}
 	}
 
 	return nil
+}
+
+// getRelPath reconstructs the relative path from tree prefix and name
+func getRelPath(prefix, name string) string {
+	// Count depth from prefix (each level adds 4 chars: "│   " or "    ")
+	depth := len(prefix) / 4
+	if depth == 0 {
+		return name
+	}
+	// We can't reconstruct the full path from prefix alone,
+	// so we just return the name for matching
+	return name
 }
 
 func absPath(path string) string {
