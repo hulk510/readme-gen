@@ -1,18 +1,23 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"time"
 
 	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/huh/spinner"
 	"github.com/hulk510/readme-gen/internal/i18n"
 	"github.com/hulk510/readme-gen/internal/scanner"
 	"github.com/hulk510/readme-gen/internal/template"
 	"github.com/hulk510/readme-gen/internal/ui"
 	"github.com/spf13/cobra"
 )
+
+const aiTimeout = 2 * time.Minute
 
 var (
 	templateFlag   string
@@ -241,8 +246,6 @@ func generateWithAI(msg i18n.Messages) error {
 		return fmt.Errorf("%s", msg.ClaudeCodeNotFound)
 	}
 
-	fmt.Println(ui.Info(msg.GeneratingWithAI))
-
 	// Build prompt based on language
 	var prompt string
 	if i18n.Current() == i18n.Japanese {
@@ -267,13 +270,27 @@ Example format:
 Read the code and add appropriate descriptions. Only update content between markers.`
 	}
 
-	// Run claude command
-	claudeCmd := exec.Command("claude", "-p", prompt, "--allowedTools", "Read,Edit,Glob,Grep")
-	claudeCmd.Stdout = os.Stdout
-	claudeCmd.Stderr = os.Stderr
+	// Run claude command with timeout and spinner
+	ctx, cancel := context.WithTimeout(context.Background(), aiTimeout)
+	defer cancel()
 
-	if err := claudeCmd.Run(); err != nil {
+	var runErr error
+	action := func() {
+		claudeCmd := exec.CommandContext(ctx, "claude", "-p", prompt, "--allowedTools", "Read,Edit,Glob,Grep")
+		runErr = claudeCmd.Run()
+	}
+
+	spinnerTitle := msg.GeneratingWithAI
+	if err := spinner.New().Title(spinnerTitle).Action(action).Run(); err != nil {
 		return fmt.Errorf("%s: %w", msg.AIGenerationFailed, err)
+	}
+
+	if ctx.Err() == context.DeadlineExceeded {
+		return fmt.Errorf("%s: timeout after %v", msg.AIGenerationFailed, aiTimeout)
+	}
+
+	if runErr != nil {
+		return fmt.Errorf("%s: %w", msg.AIGenerationFailed, runErr)
 	}
 
 	fmt.Println(ui.Success(msg.AddedDescriptions))
