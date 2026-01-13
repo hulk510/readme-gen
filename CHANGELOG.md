@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/hulk510/readme-gen/compare/v1.2.0...v1.3.0) (2026-01-13)
+
+
+### Features
+
+* add .gitignore support and config file for structure scanning ([a089ea9](https://github.com/hulk510/readme-gen/commit/a089ea93dfc6e9f592441ec14f90bad202a31eb1))
+
 ## [1.2.0](https://github.com/hulk510/readme-gen/compare/v1.1.0...v1.2.0) (2026-01-13)
 
 
