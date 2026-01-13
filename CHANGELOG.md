@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/hulk510/readme-gen/compare/v1.1.0...v1.2.0) (2026-01-13)
+
+
+### Features
+
+* add timeout and spinner to AI generation ([5e49df6](https://github.com/hulk510/readme-gen/commit/5e49df678ed022a97ce4702ca915aef2ac6b6770))
+
 ## [1.1.0](https://github.com/hulk510/readme-gen/compare/v1.0.0...v1.1.0) (2026-01-11)
 
 
