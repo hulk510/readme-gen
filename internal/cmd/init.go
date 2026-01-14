@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/charmbracelet/huh"
@@ -35,7 +36,7 @@ var initCmd = &cobra.Command{
 }
 
 func init() {
-	initCmd.Flags().StringVarP(&templateFlag, "template", "t", "", "Template to use (oss, personal, team)")
+	initCmd.Flags().StringVarP(&templateFlag, "template", "t", "", "Template to use (oss, general)")
 	initCmd.Flags().BoolVarP(&nonInteractive, "yes", "y", false, "Non-interactive mode with defaults")
 	initCmd.Flags().BoolVar(&withSkills, "with-skills", false, "Add Claude Code skills")
 	initCmd.Flags().BoolVar(&withAI, "with-ai", false, "Generate descriptions with AI")
@@ -127,8 +128,7 @@ func runInit(cmd *cobra.Command, args []string) error {
 					Title(msg.SelectTemplate).
 					Options(
 						huh.NewOption(msg.TemplateOSS, "oss"),
-						huh.NewOption(msg.TemplatePersonal, "personal"),
-						huh.NewOption(msg.TemplateTeam, "team"),
+						huh.NewOption(msg.TemplateGeneral, "general"),
 					).
 					Value(&selectedTemplate),
 			),
@@ -252,28 +252,47 @@ func generateWithAI(msg i18n.Messages) error {
 	}
 	aiTimeout := time.Duration(cfg.AI.GetTimeout()) * time.Second
 
+	// Collect additional context
+	additionalContext := collectProjectContext()
+
 	// Build prompt based on language
 	var prompt string
 	if i18n.Current() == i18n.Japanese {
-		prompt = `README.mdの構造セクションを更新してください。
-各ディレクトリの横に日本語で簡潔な説明コメントを追加してください。
+		prompt = fmt.Sprintf(`README.mdを以下の情報を基に更新してください。
 
-形式例:
-├── cmd/           # CLIエントリーポイント
-├── internal/      # 内部パッケージ
-│   ├── scanner/   # ディレクトリスキャン
+%s
 
-コードを読んで適切な説明を付けてください。マーカーの間の内容のみ更新してください。`
+更新対象:
+1. 冒頭のDescription - プロジェクトの目的を1-2文で簡潔に記載
+2. Structureセクション - 各ディレクトリの横に簡潔な説明コメントを追加
+   形式例:
+   ├── cmd/           # CLIエントリーポイント
+   ├── internal/      # 内部パッケージ
+3. Usageセクション - 基本的な使い方を記載
+4. Developmentセクション - 開発コマンドを記載（mise/make/npm scripts等から）
+
+ルール:
+- コードを読んで適切な内容を生成してください
+- 簡潔で実用的な内容にしてください
+- 既存のマーカー（<!-- readme-gen:structure:start/end -->）は維持してください`, additionalContext)
 	} else {
-		prompt = `Update the structure section in README.md.
-Add brief description comments next to each directory.
+		prompt = fmt.Sprintf(`Update README.md based on the following information.
 
-Example format:
-├── cmd/           # CLI entry point
-├── internal/      # Internal packages
-│   ├── scanner/   # Directory scanning
+%s
 
-Read the code and add appropriate descriptions. Only update content between markers.`
+Sections to update:
+1. Description at the top - Write 1-2 sentences about the project's purpose
+2. Structure section - Add brief description comments next to each directory
+   Example format:
+   ├── cmd/           # CLI entry point
+   ├── internal/      # Internal packages
+3. Usage section - Document basic usage
+4. Development section - Document development commands (from mise/make/npm scripts etc.)
+
+Rules:
+- Read the code and generate appropriate content
+- Keep it concise and practical
+- Preserve existing markers (<!-- readme-gen:structure:start/end -->)`, additionalContext)
 	}
 
 	// Run claude command with timeout and spinner
@@ -301,4 +320,38 @@ Read the code and add appropriate descriptions. Only update content between mark
 
 	fmt.Println(ui.Success(msg.AddedDescriptions))
 	return nil
+}
+
+// collectProjectContext gathers additional context from project files
+func collectProjectContext() string {
+	var contexts []string
+
+	// Check for mise.toml
+	if content, err := os.ReadFile("mise.toml"); err == nil {
+		contexts = append(contexts, fmt.Sprintf("mise.toml found:\n```toml\n%s\n```", truncateContent(string(content), 500)))
+	}
+
+	// Check for Makefile
+	if content, err := os.ReadFile("Makefile"); err == nil {
+		contexts = append(contexts, fmt.Sprintf("Makefile found:\n```make\n%s\n```", truncateContent(string(content), 500)))
+	}
+
+	// Check for package.json scripts
+	if content, err := os.ReadFile("package.json"); err == nil {
+		contexts = append(contexts, fmt.Sprintf("package.json found:\n```json\n%s\n```", truncateContent(string(content), 500)))
+	}
+
+	if len(contexts) == 0 {
+		return "No additional build configuration files detected."
+	}
+
+	return "Detected project files:\n\n" + strings.Join(contexts, "\n\n")
+}
+
+// truncateContent truncates content to maxLen characters
+func truncateContent(content string, maxLen int) string {
+	if len(content) <= maxLen {
+		return content
+	}
+	return content[:maxLen] + "\n... (truncated)"
 }

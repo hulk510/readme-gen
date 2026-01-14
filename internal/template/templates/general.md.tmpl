@@ -1,10 +1,6 @@
 # {{.ProjectName}}
 
-{{if .Description}}{{.Description}}{{else}}Internal project description.{{end}}
-
-## Overview
-
-This repository contains...
+{{if .Description}}{{.Description}}{{else}}Project description.{{end}}
 
 ## Structure
 
@@ -14,10 +10,10 @@ This repository contains...
 
 ### Prerequisites
 
-- Go 1.23+ (if Go project)
-- Node.js 20+ (if TypeScript project)
+{{if eq .Language "go"}}- Go 1.23+{{else if eq .Language "typescript"}}- Node.js 20+
+- bun / npm / pnpm{{else}}- Prerequisites here{{end}}
 
-### Setup
+### Installation
 
 {{if eq .Language "go"}}```bash
 git clone <repository-url>
@@ -30,10 +26,16 @@ bun install
 ```{{else}}```bash
 git clone <repository-url>
 cd {{.ProjectName}}
-# Setup steps here
+# Installation steps here
 ```{{end}}
 
-### Development
+## Usage
+
+```bash
+{{.ProjectName}} [command]
+```
+
+## Development
 
 ```bash
 # Run locally
@@ -42,17 +44,3 @@ cd {{.ProjectName}}
 # Run tests
 {{if eq .Language "go"}}go test ./...{{else}}bun test{{end}}
 ```
-
-## Configuration
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `EXAMPLE_VAR` | Description | `default` |
-
-## Deployment
-
-Deployment instructions here.
-
-## Contact
-
-For questions, reach out to the team.

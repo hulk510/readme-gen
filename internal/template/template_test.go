@@ -49,7 +49,7 @@ func TestRender_OSS(t *testing.T) {
 	}
 }
 
-func TestRender_Personal(t *testing.T) {
+func TestRender_General(t *testing.T) {
 	data := Data{
 		ProjectName: "my-app",
 		Description: "",
@@ -58,12 +58,12 @@ func TestRender_Personal(t *testing.T) {
 		Lang:        i18n.English,
 	}
 
-	result, err := Render("personal", data)
+	result, err := Render("general", data)
 	if err != nil {
 		t.Fatalf("Render failed: %v", err)
 	}
 
-	// Personal template should be minimal
+	// General template should have project name
 	if !strings.Contains(result, "# my-app") {
 		t.Error("expected result to contain project name")
 	}
@@ -72,31 +72,15 @@ func TestRender_Personal(t *testing.T) {
 	if !strings.Contains(result, "bun") {
 		t.Error("expected TypeScript template to mention bun")
 	}
-}
 
-func TestRender_Team(t *testing.T) {
-	data := Data{
-		ProjectName: "internal-tool",
-		Description: "Internal tool",
-		Structure:   "cmd/\ninternal/",
-		Language:    "go",
-		ModulePath:  "github.com/company/internal-tool",
-		Lang:        i18n.English,
+	// General template should have Getting Started
+	if !strings.Contains(result, "Getting Started") {
+		t.Error("expected general template to contain Getting Started section")
 	}
 
-	result, err := Render("team", data)
-	if err != nil {
-		t.Fatalf("Render failed: %v", err)
-	}
-
-	// Team template should have Overview
-	if !strings.Contains(result, "Overview") {
-		t.Error("expected team template to contain Overview section")
-	}
-
-	// Team template should have Configuration table
-	if !strings.Contains(result, "Configuration") {
-		t.Error("expected team template to contain Configuration section")
+	// General template should have Development
+	if !strings.Contains(result, "Development") {
+		t.Error("expected general template to contain Development section")
 	}
 }
 
@@ -139,27 +123,27 @@ func TestRender_OSS_Japanese(t *testing.T) {
 	}
 }
 
-func TestRender_Team_Japanese(t *testing.T) {
+func TestRender_General_Japanese(t *testing.T) {
 	data := Data{
-		ProjectName: "internal-tool",
+		ProjectName: "my-app",
 		Description: "内部ツール",
 		Structure:   "cmd/\ninternal/",
 		Language:    "go",
-		ModulePath:  "github.com/company/internal-tool",
+		ModulePath:  "github.com/company/my-app",
 		Lang:        i18n.Japanese,
 	}
 
-	result, err := Render("team", data)
+	result, err := Render("general", data)
 	if err != nil {
 		t.Fatalf("Render failed: %v", err)
 	}
 
 	// Check Japanese content
-	if !strings.Contains(result, "概要") {
-		t.Error("expected Japanese team template to contain '概要'")
+	if !strings.Contains(result, "はじめに") {
+		t.Error("expected Japanese general template to contain 'はじめに'")
 	}
-	if !strings.Contains(result, "設定") {
-		t.Error("expected Japanese team template to contain '設定'")
+	if !strings.Contains(result, "開発") {
+		t.Error("expected Japanese general template to contain '開発'")
 	}
 }
 

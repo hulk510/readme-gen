@@ -6,32 +6,47 @@ A CLI tool for managing README.md with automatic structure sync.
 
 ## Features
 
-- 📝 Generate README from templates (oss / personal / team)
-- 🔄 Marker-based directory structure auto-sync
-- 🤖 AI description generation with Claude Code
-- ✅ CI-friendly check command
-- 🌐 English / Japanese support
+- Generate README from templates (oss / general)
+- Marker-based directory structure auto-sync
+- AI description generation with Claude Code
+- CI-friendly check command
+- English / Japanese support
+
+## Use Cases
+
+**Perfect for:**
+- Small to medium projects that need a quick README
+- Projects created with `create-next-app`, `go mod init`, etc. where the initial README is outdated
+- Personal projects where README maintenance is neglected
+- First draft generation when you just want something to start with
+
+**Not designed for:**
+- Large monorepos with complex structures
+- Projects requiring detailed documentation (use dedicated docs tools)
+- Generating perfect, production-ready documentation
+
+readme-gen focuses on **structure sync** and **initial scaffolding**, not comprehensive documentation generation.
 
 ## Structure
 
 <!-- readme-gen:structure:start -->
 ```
-├── .claude/           # Claude Code skills
+├── .claude/
 │   └── skills/
-├── .github/           # GitHub Actions
+├── .github/
+│   ├── ISSUE_TEMPLATE/
 │   └── workflows/
-├── cmd/               # CLI entry point
+├── cmd/
 │   └── readme-gen/
-├── extras/            # Distributable skills for users
-│   └── skills/
-└── internal/          # Internal packages
-    ├── cmd/           # Cobra command definitions
-    ├── i18n/          # Internationalization (en/ja)
-    ├── marker/        # Marker update processing
-    ├── scanner/       # Directory scanning
-    ├── template/      # Template processing
+└── internal/
+    ├── cmd/
+    ├── config/
+    ├── i18n/
+    ├── marker/
+    ├── scanner/
+    ├── template/
     │   └── templates/
-    └── ui/            # Charm UI styles
+    └── ui/
 ```
 <!-- readme-gen:structure:end -->
 
@@ -87,7 +102,7 @@ readme-gen check
 
 | Option | Description |
 |--------|-------------|
-| `-t, --template` | Template selection (oss, personal, team) |
+| `-t, --template` | Template selection (oss, general) |
 | `-y, --yes` | Non-interactive mode |
 | `--with-skills` | Add Claude Code skills |
 | `--with-ai` | Generate descriptions with AI |

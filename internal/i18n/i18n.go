@@ -36,9 +36,8 @@ type Messages struct {
 	RunInitHint        string
 
 	// Template options
-	TemplateOSS      string
-	TemplatePersonal string
-	TemplateTeam     string
+	TemplateOSS     string
+	TemplateGeneral string
 
 	// Success messages
 	CreatedReadme string
@@ -89,9 +88,8 @@ var messages = map[Language]Messages{
 		ReadmeNotFound:     "README.md not found",
 		RunInitHint:        "Run `readme-gen init` first",
 
-		TemplateOSS:      "oss - MIT license, contributing guide",
-		TemplatePersonal: "personal - Simple, minimal",
-		TemplateTeam:     "team - Internal docs style",
+		TemplateOSS:     "oss - MIT license, contributing guide",
+		TemplateGeneral: "general - For personal and team projects",
 
 		CreatedReadme: "Created README.md",
 		CreatedSkills: "Created .claude/skills/readme.md",
@@ -135,9 +133,8 @@ var messages = map[Language]Messages{
 		ReadmeNotFound:     "README.mdが見つかりません",
 		RunInitHint:        "先に`readme-gen init`を実行してください",
 
-		TemplateOSS:      "oss - MITライセンス、コントリビューションガイド付き",
-		TemplatePersonal: "personal - シンプル、最小構成",
-		TemplateTeam:     "team - 内部ドキュメント向け",
+		TemplateOSS:     "oss - MITライセンス、コントリビューションガイド付き",
+		TemplateGeneral: "general - 個人・チームプロジェクト向け",
 
 		CreatedReadme: "README.mdを作成しました",
 		CreatedSkills: ".claude/skills/readme.mdを作成しました",

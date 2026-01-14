@@ -1,0 +1,46 @@
+# {{.ProjectName}}
+
+{{if .Description}}{{.Description}}{{else}}プロジェクトの説明。{{end}}
+
+## 構造
+
+{{.Structure}}
+
+## はじめに
+
+### 前提条件
+
+{{if eq .Language "go"}}- Go 1.23以上{{else if eq .Language "typescript"}}- Node.js 20以上
+- bun / npm / pnpm{{else}}- 前提条件をここに記載{{end}}
+
+### インストール
+
+{{if eq .Language "go"}}```bash
+git clone <repository-url>
+cd {{.ProjectName}}
+go mod download
+```{{else if eq .Language "typescript"}}```bash
+git clone <repository-url>
+cd {{.ProjectName}}
+bun install
+```{{else}}```bash
+git clone <repository-url>
+cd {{.ProjectName}}
+# インストール手順をここに記載
+```{{end}}
+
+## 使い方
+
+```bash
+{{.ProjectName}} [command]
+```
+
+## 開発
+
+```bash
+# ローカル実行
+{{if eq .Language "go"}}go run ./cmd/{{.ProjectName}}{{else}}bun run dev{{end}}
+
+# テスト実行
+{{if eq .Language "go"}}go test ./...{{else}}bun test{{end}}
+```
