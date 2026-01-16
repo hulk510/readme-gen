@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/hulk510/readme-gen/compare/v1.3.0...v1.4.0) (2026-01-16)
+
+
+### Features
+
+* add configurable AI timeout setting ([8d5b1b2](https://github.com/hulk510/readme-gen/commit/8d5b1b214282653dd542d5740ecca24db6ace8f6))
+* simplify templates and enhance AI generation ([ac5da03](https://github.com/hulk510/readme-gen/commit/ac5da03101cc01f6630b54cc7c6ff3241d4c00e1))
+
 ## [1.3.0](https://github.com/hulk510/readme-gen/compare/v1.2.0...v1.3.0) (2026-01-13)
 
 
